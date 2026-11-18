@@ -1,15 +1,25 @@
-// assets/js/components.js
-
 // 1. Komponen Header & Menu Navigasi
 function getNavbarHTML(activePage) {
+    // Cek apakah halaman saat ini berada di dalam folder views/ atau di luar (root)
+    const isInViews = window.location.pathname.includes('/views/');
+    
+    // Tentukan prefix jalur folder berdasarkan posisi file
+    const prefix = isInViews ? '' : 'views/';
+    const homePrefix = isInViews ? 'index.html' : 'views/index.html'; // Sesuaikan jika index utama di luar
+
+    // Tapi karena index.html sekarang ada di luar (root) dan yang lain di views/:
+    const linkIndex = isInViews ? '../index.html' : 'index.html';
+    const linkKarya = isInViews ? 'karya.html' : 'views/karya.html';
+    const linkSetor = isInViews ? 'setor.html' : 'views/setor.html';
+
     return `
         <header class="navbar">
             <div class="nav-container">
-                <a href="index.html" class="nav-brand">🎮 Scratch MTsN 10 Sleman</a>
+                <a href="${linkIndex}" class="nav-brand">🎮 Scratch MTsN 10 Sleman</a>
                 <nav class="nav-menu">
-                    <a href="index.html" class="nav-link ${activePage === 'beranda' ? 'active' : ''}">Beranda</a>
-                    <a href="karya.html" class="nav-link ${activePage === 'karya' ? 'active' : ''}">Karya Murid</a>
-                    <a href="setor.html" class="nav-link ${activePage === 'setor' ? 'active' : ''}">Setor Karya</a>
+                    <a href="${linkIndex}" class="nav-link ${activePage === 'beranda' ? 'active' : ''}">Beranda</a>
+                    <a href="${linkKarya}" class="nav-link ${activePage === 'karya' ? 'active' : ''}">Karya Murid</a>
+                    <a href="${linkSetor}" class="nav-link ${activePage === 'setor' ? 'active' : ''}">Setor Karya</a>
                 </nav>
             </div>
         </header>
