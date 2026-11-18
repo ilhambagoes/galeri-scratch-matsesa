@@ -15,13 +15,13 @@ async function loadGames() {
         .select('*')
         .order('created_at', { ascending: false });
 
-    if (!data || data.length === 0) {
-        gameListEl.innerHTML = `<p>Belum ada game yang di-upload nih. Yuk upload dulu!</p>`;
-        return;
-    }
-
     if (error) {
         gameListEl.innerHTML = `<p style="color: red;">Gagal memuat data: ${error.message}</p>`;
+        return;
+    }
+    
+        if (!data || data.length === 0) {
+        gameListEl.innerHTML = `<p>Belum ada game yang di-upload nih. Yuk upload dulu!</p>`;
         return;
     }
 
@@ -103,48 +103,55 @@ if (uploadForm) {
             return;
         }
 
-        // 1. Upload file ke Supabase Storage (bucket: scratch-files)
-        // Bersihkan spasi pada nama file agar URL aman
-        const cleanFileName = `${Date.now()}_${fileInput.name.replace(/\s+/g, '_')}`;
+        // Bersihkan nama file
+        const safeName = fileInput.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
+        const cleanFileName = `${Date.now()}_${safeName}`;
         
-        const { error: uploadError } = await supabaseClient.storage
-            .from('scratch-files')
-            .upload(cleanFileName, fileInput);
+        // 1. Upload ke Storage pakai fetch API langsung (membawa API Key secara eksplisit)
+        const storageUrl = `${SUPABASE_URL}/storage/v1/object/scratch-file/${cleanFileName}`;
+        
+        try {
+            const uploadResponse = await fetch(storageUrl, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': fileInput.type || 'application/octet-stream'
+                },
+                body: fileInput
+            });
 
-        if (uploadError) {
-            alert('Gagal upload file ke Storage: ' + uploadError.message);
-            submitBtn.innerText = 'Upload ke Galeri';
-            submitBtn.disabled = false;
-            return;
-        }
+            if (!uploadResponse.ok) {
+                const errResult = await uploadResponse.json();
+                throw new Error(errResult.message || 'Gagal mengupload file ke Storage.');
+            }
 
-        // 2. Ambil Public URL file tersebut
-        const { data: urlData } = supabaseClient.storage
-            .from('scratch-files')
-            .getPublicUrl(cleanFileName);
+            // 2. Ambil Public URL file tersebut
+            const fileGameUrl = `${SUPABASE_URL}/storage/v1/object/public/scratch-file/${cleanFileName}`;
 
-        const fileGameUrl = urlData.publicUrl;
+            // 3. Simpan informasi ke tabel 'games' via Supabase Client
+            const { error: dbError } = await supabaseClient
+                .from('games')
+                .insert([
+                    {
+                        game_title: gameTitle,
+                        student_name: studentName,
+                        class: studentClass,
+                        file_game_url: fileGameUrl
+                    }
+                ]);
 
-        // 3. Simpan informasi ke tabel 'games' sesuai struktur kolommu
-        const { error: dbError } = await supabaseClient
-            .from('games')
-            .insert([
-                {
-                    game_title: gameTitle,
-                    student_name: studentName,
-                    class: studentClass,
-                    file_game_url: fileGameUrl
-                }
-            ]);
+            if (dbError) {
+                throw new Error('Gagal menyimpan ke Database: ' + dbError.message);
+            }
 
-        if (dbError) {
-            alert('Gagal menyimpan ke Database: ' + dbError.message);
-        } else {
             alert('Mantap! Game berhasil di-upload ke galeri!');
             window.location.href = 'index.html';
-        }
 
-        submitBtn.innerText = 'Upload ke Galeri';
-        submitBtn.disabled = false;
+        } catch (error) {
+            alert('Terjadi kesalahan: ' + error.message);
+            submitBtn.innerText = 'Upload ke Galeri';
+            submitBtn.disabled = false;
+        }
     });
 }
