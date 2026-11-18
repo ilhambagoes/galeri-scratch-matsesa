@@ -1,17 +1,17 @@
 // ==========================================
 // LOGIKA HALAMAN GALERI (index.html)
 // ==========================================
-const gameListEl = document.getElementById('game-list');
+const galleryContainer = document.getElementById('gallery-container');
 const playerModal = document.getElementById('player-modal');
 const modalTitle = document.getElementById('modal-title');
 const turbowarpIframe = document.getElementById('turbowarp-iframe');
 const closeModalBtn = document.getElementById('close-modal-btn');
 
 async function loadGames() {
-    if (!gameListEl) return;
+    if (!galleryContainer) return;
 
     // Tampilkan shimmer loading
-    gameListEl.innerHTML = getShimmerCardHTML().repeat(3); // Tampilkan 3 shimmer card
+    galleryContainer.innerHTML = getShimmerCardHTML().repeat(3); // Tampilkan 3 shimmer card
 
     // Mengambil data game dari Supabase
     const { data, error } = await supabaseClient
@@ -20,21 +20,21 @@ async function loadGames() {
         .order('created_at', { ascending: false });
 
     if (error) {
-        gameListEl.innerHTML = `<p style="color: red;">Gagal memuat data: ${error.message}</p>`;
+        galleryContainer.innerHTML = `<p style="color: red;">Gagal memuat data: ${error.message}</p>`;
         return;
     }
     
     if (!data || data.length === 0) {
-        gameListEl.innerHTML = getEmptyStateHTML();
+        galleryContainer.innerHTML = getEmptyStateHTML();
         return;
     }
 
-    gameListEl.innerHTML = '';
+    galleryContainer.innerHTML = '';
     data.forEach(game => {
         const card = document.createElement('div');
         card.className = 'game-card';
         card.innerHTML = getGameCardHTML(game);
-        gameListEl.appendChild(card);
+        galleryContainer.appendChild(card);
     });
 
     // Pasang event listener ke semua tombol "Mainkan Game"
@@ -74,7 +74,7 @@ loadGames();
 
 
 // ==========================================
-// LOGIKA HALAMAN ADMIN UPLOAD (admin.html)
+// LOGIKA HALAMAN UPLOAD (setor.html)
 // ==========================================
 const uploadForm = document.getElementById('upload-form');
 
@@ -141,7 +141,7 @@ if (uploadForm) {
             }
 
             alert('Mantap! Game berhasil di-upload ke galeri!');
-            window.location.href = 'index.html';
+            window.location.href = 'karya.html';
 
         } catch (error) {
             alert('Terjadi kesalahan: ' + error.message);

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setor Karya - Galeri Scratch MTsN 10 Sleman</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Wadah Header Navbar -->
+    <div id="navbar-container"></div>
+
+    <main class="container">
+        <!-- Kotak Wrapper Form agar di tengah dan ada efek card -->
+        <div class="form-card-wrapper">
+            <div class="form-header">
+                <h2>Setor Karya Scratch (.sb3)</h2>
+                <p>Unggah file proyek Scratch kamu agar langsung tampil di halaman Karya Murid.</p>
+            </div>
+
+            <form id="upload-form">
+                <div class="form-group">
+                    <label for="game-title">Judul Game / Proyek</label>
+                    <input type="text" id="game-title" placeholder="Contoh: Petualangan Kucing" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="student-name">Nama Pembuat</label>
+                    <input type="text" id="student-name" placeholder="Nama lengkap murid" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="student-class">Kelas</label>
+                    <input type="text" id="student-class" placeholder="Contoh: 7A" required>
+                </div>
+
+                <!-- Input File Kustom yang Lebih Modern -->
+                <div class="form-group">
+                    <label>File Proyek Scratch (.sb3)</label>
+                    <div class="file-drop-zone" onclick="document.getElementById('game-file').click()">
+                        <span id="file-label-text">📁 Klik atau pilih file .sb3 di sini</span>
+                        <input type="file" id="game-file" accept=".sb3" required style="display: none;">
+                    </div>
+                </div>
+
+                <button type="submit" id="submit-btn" class="btn-primary full-width">Upload & Publikasikan</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        // Render Navbar dengan status aktif 'setor'
+        document.getElementById('navbar-container').innerHTML = getNavbarHTML('setor');
+
+        // Script kecil agar nama file yang dipilih muncul di kotak kustom
+        const fileInput = document.getElementById('game-file');
+        const fileLabelText = document.getElementById('file-label-text');
+        
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                fileLabelText.textContent = "📄 " + fileInput.files[0].name;
+                fileLabelText.style.color = "#4F46E5";
+                fileLabelText.style.fontWeight = "600";
+            }
+        });
+    </script>
+</body>
+</html>

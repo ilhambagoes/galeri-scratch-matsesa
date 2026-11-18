@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karya Murid - Galeri Scratch MTsN 10 Sleman</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Wadah Header Navbar -->
+    <div id="navbar-container"></div>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Daftar Karya Interaktif Murid</h2>
+            <p>Klik bendera hijau pada masing-masing proyek untuk langsung memainkannya.</p>
+        </div>
+
+        <!-- Container Galeri Game -->
+        <div id="gallery-container" class="gallery-grid"></div>
+    </main>
+
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        // Render Navbar dengan status aktif 'karya'
+        document.getElementById('navbar-container').innerHTML = getNavbarHTML('karya');
+    </script>
+</body>
+</html>

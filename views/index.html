@@ -3,41 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeri Game Scratch Murid</title>
+    <title>Beranda - Galeri Scratch MTsN 10 Sleman</title>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <div>
-                <h1>🎮 Galeri Karya Scratch MTsN 10 Sleman 📹</h1>
-                <p>Kumpulan karya scratch interaktif buatan murid-murid MTsN 10 Sleman.</p>
-            </div>
-            <a href="admin.html" class="btn btn-primary">+ Upload Karya (Guru)</a>
-        </header>
+    <!-- Wadah Header Navbar -->
+    <div id="navbar-container"></div>
 
-        <!-- Tempat daftar karya muncul -->
-        <main id="game-list" class="game-grid">
-            <p>Memuat daftar karya...</p>
-        </main>
-    </div>
-
-    <!-- Modal Pop-up untuk Main Karya -->
-    <div id="player-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modal-title">Judul Karya</h2>
-                <button id="close-modal-btn" class="close-btn">&times;</button>
+    <main class="container">
+        <!-- Section Hero / Banner -->
+        <section class="hero-banner">
+            <div class="hero-content">
+                <h1>Wadah Kreativitas & Logika Pemrograman Murid</h1>
+                <p>
+                    Selamat datang di Galeri Karya Scratch MTsN 10 Sleman. Platform ini didedikasikan untuk mendokumentasikan, memamerkan, dan memainkan berbagai game serta animasi interaktif hasil karya kreatif para siswa-siswi dalam pembelajaran Informatika.
+                </p>
             </div>
-            <div class="iframe-wrapper">
-                <iframe id="turbowarp-iframe" src="" allowfullscreen></iframe>
+            <div class="hero-image">
+                <!-- Ganti src dengan '../assets/images/banner.png' jika kamu punya file gambar lokal -->
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80" alt="Banner Kreativitas Game Scratch">
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
-    <script src="../assets/js/config.js"></script>
     <script src="../assets/js/components.js"></script>
-    <script src="../assets/js/app.js"></script>
+    <script>
+        // Render Navbar dengan status aktif 'beranda'
+        document.getElementById('navbar-container').innerHTML = getNavbarHTML('beranda');
+    </script>
 </body>
 </html>
