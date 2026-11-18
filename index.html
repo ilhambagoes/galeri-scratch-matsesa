@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Game Scratch Murid</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">🎮 Galeri Game Scratch Kelas</h1>
+                <p class="text-slate-600">Kumpulan karya game interaktif buatan murid-murid.</p>
+            </div>
+            <a href="admin.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition">Login Guru (Upload)</a>
+        </header>
+
+        <!-- Container Daftar Game -->
+        <div id="game-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <p class="text-slate-500">Memuat game...</p>
+        </div>
+    </div>
+
+    <!-- Modal Player TurboWarp -->
+    <div id="player-modal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl overflow-hidden max-w-2xl w-full p-4 relative">
+            <button onclick="closePlayer()" class="absolute top-3 right-3 text-slate-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+            <h2 id="modal-title" class="text-xl font-bold text-slate-800 mb-3">Judul Game</h2>
+            <div class="aspect-video w-full bg-black rounded-lg overflow-hidden">
+                <iframe id="turbowarp-iframe" src="" class="w-full h-full border-0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MASUKKAN KREDENSIAL SUPABASE ANDA DI SINI
+        const SUPABASE_URL = 'GANTI_DENGAN_SUPABASE_URL_ANDA';
+        const SUPABASE_ANON_KEY = 'GANTI_DENGAN_SUPABASE_ANON_KEY_ANDA';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function fetchGames() {
+            const { data, error } = await supabase.from('games').select('*').order('created_at', { ascending: false });
+            const listEl = document.getElementById('game-list');
+            
+            if (error) {
+                listEl.innerHTML = `<p class="text-red-500">Gagal memuat data: ${error.message}</p>`;
+                return;
+            }
+
+            if (data.length === 0) {
+                listEl.innerHTML = `<p class="text-slate-500">Belum ada game yang di-upload.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = '';
+            data.forEach(game => {
+                listEl.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden p-5 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-1">${game.title}</h3>
+                            <p class="text-sm text-slate-500 mb-4">Karya: <span class="font-semibold text-slate-700">${game.student_name}</span></p>
+                        </div>
+                        <button onclick="playGame('${game.sb3_url}', '${game.title.replace(/'/g, "\\'")}')" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-medium hover:bg-emerald-700 transition text-center">
+                            🚀 Mainkan Game
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function playGame(url, title) {
+            document.getElementById('modal-title').innerText = title;
+            // Menggunakan embed TurboWarp
+            document.getElementById('turbowarp-iframe').src = `https://turbowarp.org/embed?project_url=${encodeURIComponent(url)}&autoplay`;
+            document.getElementById('player-modal').classList.remove('hidden');
+        }
+
+        function closePlayer() {
+            document.getElementById('player-modal').classList.add('hidden');
+            document.getElementById('turbowarp-iframe').src = ''; // Matikan game saat ditutup
+        }
+
+        fetchGames();
+    </script>
+</body>
+</html>

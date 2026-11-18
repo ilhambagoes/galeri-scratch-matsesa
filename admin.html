@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Upload Game Scratch</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8">
+        <h1 class="text-2xl font-bold text-slate-800 mb-2">📤 Upload Game Scratch</h1>
+        <p class="text-sm text-slate-500 mb-6">Unggah file .sb3 karya murid ke galeri.</p>
+
+        <form id="upload-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Judul Game</label>
+                <input type="text" id="title" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Nama Murid</label>
+                <input type="text" id="student_name" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">File Proyek (.sb3)</label>
+                <input type="file" id="sb3_file" accept=".sb3" required class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+            </div>
+            <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition">Upload Game</button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <a href="index.html" class="text-sm text-indigo-600 hover:underline">← Kembali ke Galeri Utama</a>
+        </div>
+    </div>
+
+    <script>
+        // MASUKKAN KREDENSIAL SUPABASE ANDA DI SINI
+        const SUPABASE_URL = 'https://lemsqxhhykxifelswqoy.supabase.co/rest/v1/';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jpZFWHUVq1zGfnfxADmiFQ_zkHL08JF';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = 'Sedang mengupload...';
+            btn.disabled = true;
+
+            const title = document.getElementById('title').value;
+            const student_name = document.getElementById('student_name').value;
+            const fileInput = document.getElementById('sb3_file').files[0];
+
+            if (!fileInput) return alert('Pilih file .sb3 dulu!');
+
+            // 1. Upload file .sb3 ke Supabase Storage (bucket: scratch-files)
+            const fileName = `${Date.now()}_${fileInput.name}`;
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('scratch-files')
+                .upload(fileName, fileInput);
+
+            if (uploadError) {
+                alert('Gagal upload file: ' + uploadError.message);
+                btn.innerText = 'Upload Game';
+                btn.disabled = false;
+                return;
+            }
+
+            // 2. Dapatkan Public URL dari file yang di-upload
+            const { data: urlData } = supabase.storage
+                .from('scratch-files')
+                .getPublicUrl(fileName);
+
+            const sb3_url = urlData.publicUrl;
+
+            // 3. Simpan data game ke tabel 'games' di Supabase
+            const { error: dbError } = await supabase.from('games').insert([
+                { title, student_name, sb3_url }
+            ]);
+
+            if (dbError) {
+                alert('Gagal menyimpan ke database: ' + dbError.message);
+            } else {
+                alert('Berhasil mengupload game!');
+                window.location.href = 'index.html';
+            }
+
+            btn.innerText = 'Upload Game';
+            btn.disabled = false;
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Upload Game Scratch</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8">
+        <h1 class="text-2xl font-bold text-slate-800 mb-2">📤 Upload Game Scratch</h1>
+        <p class="text-sm text-slate-500 mb-6">Unggah file .sb3 karya murid ke galeri.</p>
+
+        <form id="upload-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Judul Game</label>
+                <input type="text" id="title" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Nama Murid</label>
+                <input type="text" id="student_name" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">File Proyek (.sb3)</label>
+                <input type="file" id="sb3_file" accept=".sb3" required class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+            </div>
+            <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition">Upload Game</button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <a href="index.html" class="text-sm text-indigo-600 hover:underline">← Kembali ke Galeri Utama</a>
+        </div>
+    </div>
+
+    <script>
+        // MASUKKAN KREDENSIAL SUPABASE ANDA DI SINI
+        const SUPABASE_URL = 'GANTI_DENGAN_SUPABASE_URL_ANDA';
+        const SUPABASE_ANON_KEY = 'GANTI_DENGAN_SUPABASE_ANON_KEY_ANDA';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = 'Sedang mengupload...';
+            btn.disabled = true;
+
+            const title = document.getElementById('title').value;
+            const student_name = document.getElementById('student_name').value;
+            const fileInput = document.getElementById('sb3_file').files[0];
+
+            if (!fileInput) return alert('Pilih file .sb3 dulu!');
+
+            // 1. Upload file .sb3 ke Supabase Storage (bucket: scratch-files)
+            const fileName = `${Date.now()}_${fileInput.name}`;
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('scratch-files')
+                .upload(fileName, fileInput);
+
+            if (uploadError) {
+                alert('Gagal upload file: ' + uploadError.message);
+                btn.innerText = 'Upload Game';
+                btn.disabled = false;
+                return;
+            }
+
+            // 2. Dapatkan Public URL dari file yang di-upload
+            const { data: urlData } = supabase.storage
+                .from('scratch-files')
+                .getPublicUrl(fileName);
+
+            const sb3_url = urlData.publicUrl;
+
+            // 3. Simpan data game ke tabel 'games' di Supabase
+            const { error: dbError } = await supabase.from('games').insert([
+                { title, student_name, sb3_url }
+            ]);
+
+            if (dbError) {
+                alert('Gagal menyimpan ke database: ' + dbError.message);
+            } else {
+                alert('Berhasil mengupload game!');
+                window.location.href = 'index.html';
+            }
+
+            btn.innerText = 'Upload Game';
+            btn.disabled = false;
+        });
+    </script>
+</body>
+</html>
