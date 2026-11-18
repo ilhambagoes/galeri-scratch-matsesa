@@ -21,7 +21,7 @@ async function loadGames() {
     }
     
         if (!data || data.length === 0) {
-        gameListEl.innerHTML = `<p>Belum ada game yang di-upload nih. Yuk upload dulu!</p>`;
+        gameListEl.innerHTML = getEmptyStateHTML();
         return;
     }
 

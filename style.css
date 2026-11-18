@@ -248,3 +248,69 @@ body {
 .back-link:hover {
     text-decoration: underline;
 }
+
+/* Empty State */
+/* ==========================================
+   STYLING EMPTY STATE (GALERI KOSONG) - CENTERED
+   ========================================== */
+.empty-state {
+    grid-column: 1 / -1; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* Membuat seluruh isi elemen anak jadi di tengah */
+    justify-content: center;
+    text-align: center;     /* Rata tengah untuk teks */
+    padding: 10px 20px;
+    margin: 40px auto;
+    max-width: 600px;
+    width: 100%;
+}
+
+.empty-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+.empty-subtitle {
+    font-size: 1rem;
+    color: #64748B;
+    margin: 0 auto 30px auto;
+    text-align: center;
+    max-width: 400px;
+}
+
+.empty-illustration {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 30px auto; /* Auto margin kiri-kanan agar pasti di tengah */
+    display: flex;
+    justify-content: center;
+}
+
+.empty-illustration svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.empty-cta-btn {
+    display: inline-block;
+    background-color: #4F46E5;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 12px 28px;
+    border-radius: 999px;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    margin: 0 auto; /* Posisi tombol di tengah */
+}
+
+.empty-cta-btn:hover {
+    background-color: #4338CA;
+    transform: translateY(-2px);
+}
