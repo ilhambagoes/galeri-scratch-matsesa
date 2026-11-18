@@ -10,6 +10,10 @@ const closeModalBtn = document.getElementById('close-modal-btn');
 async function loadGames() {
     if (!gameListEl) return;
 
+    // Tampilkan shimmer loading
+    gameListEl.innerHTML = getShimmerCardHTML().repeat(3); // Tampilkan 3 shimmer card
+
+    // Mengambil data game dari Supabase
     const { data, error } = await supabaseClient
         .from('games')
         .select('*')
@@ -20,7 +24,7 @@ async function loadGames() {
         return;
     }
     
-        if (!data || data.length === 0) {
+    if (!data || data.length === 0) {
         gameListEl.innerHTML = getEmptyStateHTML();
         return;
     }

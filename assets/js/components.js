@@ -1,4 +1,4 @@
-// components.js
+// Empty State Component
 function getEmptyStateHTML() {
     return `
             <div class="empty-state">
@@ -39,7 +39,7 @@ function getEmptyStateHTML() {
         `;
 }
 
-// 2. Komponen Kartu Game (Game Card)
+// Komponen Kartu Game (Game Card)
 function getGameCardHTML(game) {
     return `
         <div class="game-card">
@@ -51,6 +51,18 @@ function getGameCardHTML(game) {
                         width="100%" height="300" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen>
                 </iframe>
             </div>
+        </div>
+    `;
+}
+
+// Shimmer Loading Component
+function getShimmerCardHTML() {
+    return `
+        <div class="shimmer-card">
+            <div class="shimmer-line shimmer-title"></div>
+            <div class="shimmer-line shimmer-text"></div>
+            <div class="shimmer-line shimmer-text" style="width: 50%;"></div>
+            <div class="shimmer-line shimmer-player"></div>
         </div>
     `;
 }
