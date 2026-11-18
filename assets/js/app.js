@@ -29,16 +29,7 @@ async function loadGames() {
     data.forEach(game => {
         const card = document.createElement('div');
         card.className = 'game-card';
-        card.innerHTML = `
-            <div>
-                <span class="badge-class">Kelas ${game.class || '-'}</span>
-                <h3>${game.game_title}</h3>
-                <p>Karya: <strong>${game.student_name}</strong></p>
-            </div>
-            <button class="btn btn-play" data-url="${game.file_game_url}" data-title="${game.game_title}">
-                🚀 Mainkan Game
-            </button>
-        `;
+        card.innerHTML = getGameCardHTML(game);
         gameListEl.appendChild(card);
     });
 

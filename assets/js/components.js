@@ -38,3 +38,19 @@ function getEmptyStateHTML() {
             </div>
         `;
 }
+
+// 2. Komponen Kartu Game (Game Card)
+function getGameCardHTML(game) {
+    return `
+        <div class="game-card">
+            <h3>${game.game_title}</h3>
+            <p><strong>Pembuat:</strong> ${game.student_name}</p>
+            <p><strong>Kelas:</strong> ${game.class}</p>
+            <div class="player-container">
+                <iframe src="https://turbowarp.org/embed.html?project_url=${encodeURIComponent(game.file_game_url)}" 
+                        width="100%" height="300" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    `;
+}
